@@ -16,8 +16,7 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
-
-    return true;
+    return system(cmd) != -1;
 }
 
 /**
@@ -40,6 +39,8 @@ bool do_exec(int count, ...)
     va_start(args, count);
     char * command[count+1];
     int i;
+  
+    
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
@@ -58,10 +59,17 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+    pid_t pid = fork();
+    if(pid == 0)
+    {
+         execv(command[0],&command[0]);
+    }
 
     va_end(args);
-
-    return true;
+    int status;
+    wait(&status);
+    
+    return (pid > -1) && (status == 0);
 }
 
 /**
@@ -92,8 +100,23 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+    int pid;
+    
+    int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 777);
+    if (fd < 0) { perror("open"); abort(); }
+    switch (pid = fork()) {
+    case -1: return false;
+    case 0:
+    if (dup2(fd, 1) < 0) { perror("dup2"); abort(); }
+    close(fd);
+    if(execv(command[0],command)==-1){return false;}
+    default:
+    close(fd);
+    /* do whatever the parent wants to do. */
+    }
 
     va_end(args);
-
-    return true;
+    int status;
+    wait(&status);
+    return (pid > -1) && (status == 0);
 }
