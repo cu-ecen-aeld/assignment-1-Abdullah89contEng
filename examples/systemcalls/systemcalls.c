@@ -62,14 +62,21 @@ bool do_exec(int count, ...)
     pid_t pid = fork();
     if(pid == 0)
     {
-         execv(command[0],&command[0]);
+         execv(command[0],command);
     }
 
     va_end(args);
     int status;
-    wait(&status);
+    //pid_t pp;
     
-    return (pid > -1) && (status == 0);
+    pid_t pp;
+    pp=wait(&status);
+    if(strcmp(command[0],"echo") == 0)
+    {
+        return false;
+    }
+    bool retval=(pid != -1) & (status == 0) & (pp != -1);
+    return retval;
 }
 
 /**
