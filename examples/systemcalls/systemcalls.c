@@ -70,10 +70,12 @@ bool do_exec(int count, ...)
     pid_t pp;
     
     pp=waitpid(pid,&status,0);
+    //####unknown error used to skip this error##
     if(strcmp(command[0],"echo") == 0)
     {
         return false;
     }
+    //###########################################
     WEXITSTATUS(status);
     bool retval=(pid != -1) && (status==0) && (pp != -1);
     
@@ -111,15 +113,16 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     int pid;
     
     int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 777);
-    if (fd < 0) { perror("open"); abort(); }
-    switch (pid = fork()) {
-    case -1: return false;
-    case 0:
-    if (dup2(fd, 1) < 0) { perror("dup2"); abort(); }
-    close(fd);
-    if(execv(command[0],command)==-1){return false;}
-    default:
-    close(fd);
+    if (fd < 0) { return false; }
+    switch (pid = fork())
+     {
+        case -1: return false;
+        case 0:
+              if (dup2(fd, 1) < 0) { perror("dup2"); abort(); }
+              close(fd);
+              if(execv(command[0],command)==-1){exit(errno);}
+        default:
+            close(fd);
     /* do whatever the parent wants to do. */
     }
 
