@@ -67,17 +67,18 @@ bool do_exec(int count, ...)
 
     va_end(args);
     int status;
-    //pid_t pp;
-    
     pid_t pp;
-    pp=wait(&status);
+    
+    pp=waitpid(pid,&status,0);
     if(strcmp(command[0],"echo") == 0)
     {
         return false;
     }
-    bool retval=(pid != -1) & (status == 0) & (pp != -1);
+    WEXITSTATUS(status);
+    bool retval=(pid != -1) && (status==0) && (pp != -1);
+    
     return retval;
-}
+}  
 
 /**
 * @param outputfile - The full path to the file to write with command output.
