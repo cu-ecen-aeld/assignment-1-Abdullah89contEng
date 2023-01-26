@@ -147,7 +147,7 @@ sudo chown -R root:root ${ROOTFS}
 
 # TODO: Create initramfs.cpio.gz
 cd ${ROOTFS}
-sudo rsync -avr ${SYSROOT}/* .
+sudo cp -avr ${SYSROOT}/* .
 find . | sudo cpio -o -H newc  > ../initramfs.cpio
 cd ..
 gzip -f initramfs.cpio
