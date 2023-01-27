@@ -83,7 +83,7 @@ fi
 ROOTFS=${OUTDIR}/rootfs
 # TODO: Create necessary base directories
 cd $OUTDIR/linux-stable
-sudo make INSTALL_MOD_PATH=${ROOTFS} modules_install
+#sudo make INSTALL_MOD_PATH=${ROOTFS} modules_install
 
 cd "$OUTDIR"
 
@@ -140,7 +140,7 @@ make clean
 make CROSS_COMPILE=${CROSS_COMPILE}
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-sudo cp --parent {finder.sh,conf/username.txt,finder-test.sh,writer,autorun-qemu.sh} ${ROOTFS}/home
+sudo cp --parent {finder.sh,conf/username.txt,finder-test.sh,writer,autorun-qemu.sh,dependencies.sh,autorun-qemu.sh} ${ROOTFS}/home
 sudo cp -ar ../conf ${OUTDIR}/rootfs/conf
 sudo chown -R root:root ${ROOTFS}
 # TODO: Chown the root directory
