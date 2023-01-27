@@ -144,10 +144,11 @@ sudo cp --parent {finder.sh,conf/username.txt,finder-test.sh,writer,autorun-qemu
 sudo cp -ar ../conf ${OUTDIR}/rootfs/conf
 sudo chown -R root:root ${ROOTFS}
 # TODO: Chown the root directory
-
 # TODO: Create initramfs.cpio.gz
 cd ${ROOTFS}
-sudo cp -avr ${SYSROOT}/* .
+sudo mkdir lib64
+sudo cp -avr ${SYSROOT}{/lib64/libm.so.6,/lib64/libm-2.33.so,/lib64/libresolv.so.2,/lib64/libresolv-2.33.so,/lib64/libc.so.6,/lib64/libc-2.33.so,/lib64/ld-2.33.so} ./lib64/
+sudo cp -avr ${SYSROOT}/lib/ld-linux-aarch64.so.1 ./lib/
 find . | sudo cpio -o -H newc  > ../initramfs.cpio
 cd ..
 gzip -f initramfs.cpio
