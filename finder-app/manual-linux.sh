@@ -12,7 +12,7 @@ BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
 ARCH=arm64
 CROSS_COMPILE=aarch64-none-linux-gnu-
-SYSROOT=$(aarch64-none-linux-gnu-gcc -print-sysroot)
+SYSROOT1="/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/../aarch64-none-linux-gnu/libc"
 APPDIR=$PWD
 
 export ARCH
@@ -148,8 +148,8 @@ sudo chown -R root:root ${ROOTFS}
 # TODO: Create initramfs.cpio.gz
 cd ${ROOTFS}
 sudo mkdir lib64
-sudo cp -avr ${SYSROOT}{/lib64/libm.so.6,/lib64/libm-2.33.so,/lib64/libresolv.so.2,/lib64/libresolv-2.33.so,/lib64/libc.so.6,/lib64/libc-2.33.so,/lib64/ld-2.33.so} ./lib64/
-sudo cp -avr ${SYSROOT}/lib/ld-linux-aarch64.so.1 ./lib/
+sudo cp -avr ${SYSROOT1}{/lib64/libm.so.6,/lib64/libm-2.33.so,/lib64/libresolv.so.2,/lib64/libresolv-2.33.so,/lib64/libc.so.6,/lib64/libc-2.33.so,/lib64/ld-2.33.so} ./lib64/
+sudo cp -avr ${SYSROOT1}/lib/ld-linux-aarch64.so.1 ./lib/
 find . | sudo cpio -o -H newc  > ../initramfs.cpio
 cd ..
 gzip -f initramfs.cpio
