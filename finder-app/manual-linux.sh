@@ -5,7 +5,7 @@
 set -e
 set -u
 
-OUTDIR=/tmp/aesd-autograder
+OUTDIR='/tmp/aesd-autograder'
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
@@ -21,7 +21,7 @@ if [ $# -lt 1 ]
 then
 	echo "Using default directory ${OUTDIR} for output"
 else
-	OUTDIR=$PWD/$1
+	OUTDIR=$1
 	echo "Using passed directory ${OUTDIR} for output"
 fi
 if [ -d $OUTDIR ]
@@ -29,7 +29,8 @@ then
     echo "folder is alreay created"
     STATUS=0
 else
-    mkdir -p ${OUTDIR}
+    echo "intiate $OUTDIR "
+    mkdir  ${OUTDIR}
     STATUS=$?
 fi
 
